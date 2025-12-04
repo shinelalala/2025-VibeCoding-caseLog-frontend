@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>專案歷程查詢小站 — 前端工程師專用</title>
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+  <meta name="description" content="專案名稱搜尋與歷程顯示" />
+
+  <style>
+    /* CSS:BASE-START */
+    :root {
+      --color-primary: #e63946;
+      --color-accent-blue: #1d4ed8;
+      --color-sky-1: #dbeffd;
+      --color-sky-2: #bfe7ff;
+      --text-dark: #0f172a;
+      --muted: #475569;
+      --max-width: 1100px;
+      --container-pad: 16px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", Arial, sans-serif;
+      background: linear-gradient(180deg, var(--color-sky-1), var(--color-sky-2));
+      color: var(--text-dark);
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: auto;
+      padding: 0 var(--container-pad);
+      width: 100%;
+    }
+
+    header {
+      padding: 12px 0;
+    }
+
+    .nav {
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo .mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-login {
+      border: 2px solid rgba(0, 0, 0, 0.07);
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: white;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    main {
+      flex: 1;
+    }
+
+    footer {
+      padding: 16px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* CSS:BASE-END */
+
+
+    /* CSS:BANNER-START */
+    .section {
+      padding: 20px 0;
+    }
+
+    .section-banner .banner-card {
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      gap: 14px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .banner-visual {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, var(--color-accent-blue), var(--color-primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .banner-text h1 {
+      margin: 0 0 6px 0;
+      font-size: 20px;
+    }
+
+    .banner-text p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    /* CSS:BANNER-END */
+
+
+    /* CSS:SEARCH-START */
+    .search-card {
+      padding: 16px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-label {
+      font-size: 13px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .search-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 2px solid rgba(0, 0, 0, 0.08);
+      font-size: 15px;
+      background: white;
+    }
+
+    /* ★★★★★ 馬力歐 Q 版金幣磚頭查詢按鈕（純 CSS） ★★★★★ */
+    .btn-query {
+      width: 64px;
+      height: 64px;
+      background: #b87333;
+      /* 銅色磚頭底色 */
+      border: 4px solid #000;
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+      box-shadow: inset -4px -4px #8b4513, inset 4px 4px #d2691e;
+    }
+
+    /* 磚頭上的金幣符號 */
+    .btn-query::before {
+      content: "？";
+      font-size: 32px;
+      font-weight: bold;
+      color: yellow;
+      text-shadow: 2px 2px #000;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .btn-query:active {
+      transform: translateY(4px);
+      box-shadow: inset -2px -2px #8b4513, inset 2px 2px #d2691e;
+    }
+
+    /* CSS:SEARCH-END */
+
+
+    /* CSS:RESULT-START */
+    .result-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .result-item {
+      padding: 12px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+      border-left: 5px solid #333;
+      border-bottom: 3px solid #333;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .project-title {
+      color: var(--color-primary);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .project-date {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .project-body {
+      font-size: 14px;
+      margin: 30px 0 0 0;
+    }
+
+    /* CSS:RESULT-END */
+
+
+    /* CSS:RWD-START */
+    @media (min-width:768px) {
+      .search-controls {
+        flex-direction: row;
+      }
+
+      .search-input {
+        flex: 1;
+      }
+
+      .result-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+    }
+
+    /* CSS:RWD-END */
+    /* ====== LOGO MARK：Q 版小蘑菇（替換 .logo .mark） ====== */
+    /* 將原本 .logo .mark 的文字隱藏，使用 pseudo-element 繪製蘑菇 */
+    .logo .mark {
+      /* 保留原有尺寸但清空文字 */
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 1;
+      overflow: visible;
+      position: relative;
+      text-indent: -9999px;
+      /* 隱藏原本文字（例如 PX） */
+      background: transparent;
+      vertical-align: middle;
+    }
+
+    /* 使用 ::before 繪製蘑菇帽（紅色帶白點）與 ::after 畫菌柄 */
+    .logo .mark::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 3px;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 22px;
+      border-radius: 50% 50% 42% 42%;
+      background:
+        radial-gradient(circle at 22% 40%, rgba(255, 255, 255, 0.95) 0 5px, transparent 6px),
+        radial-gradient(circle at 62% 45%, rgba(255, 255, 255, 0.95) 0 4.5px, transparent 5.5px),
+        linear-gradient(180deg, #e23b3b 0%, #c12b2b 100%);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.18);
+      border: 2px solid rgba(0, 0, 0, 0.12);
+      z-index: 2;
+    }
+
+    /* 菌柄（臉） */
+    .logo .mark::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 2px;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 20px;
+      border-radius: 0 0 10px 10px;
+      background: linear-gradient(180deg, #f7e3c7 0%, #f2d8b0 100%);
+      border: 2px solid rgba(0, 0, 0, 0.12);
+      z-index: 1;
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    /* 眼睛（用內嵌小元素：若你的 HTML 沒有 .eye，可用下面的偽元素繪兩眼） */
+    .logo .mark .eye {
+      display: none;
+    }
+
+    /* 若你有實體 .eye，可使用並顯示 */
+    /* 以偽元素繪左右眼（避開需要改 HTML） */
+    .logo .mark>.eye-left,
+    .logo .mark>.eye-right {
+      display: none;
+    }
+
+    .logo .mark {
+      /* 加一層小笑臉，利用 box-shadow 做出兩個小黑點（眼睛） */
+      background-image:
+        radial-gradient(circle at 32% 70%, #000 0 2px, transparent 3px),
+        radial-gradient(circle at 68% 70%, #000 0 2px, transparent 3px);
+      background-repeat: no-repeat;
+      background-position: 32% 72%, 68% 72%;
+      background-size: 6px 6px, 6px 6px;
+    }
+
+    /* 若想要更強烈的外框（可選） */
+    .logo .mark {
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    /* ====== SECTION-BANNER：馬力歐風橫幅（雲朵 + 水管工人 + 水管 + 天空） ====== */
+    /* 這裡使用內嵌 SVG 畫面當作 .banner-card 的背景，確保可伸縮並保持可愛風格 */
+    .section-banner .banner-card {
+      position: relative;
+      overflow: visible;
+      min-height: 140px;
+      /* 保證橫幅高度 */
+      border-radius: 14px;
+      padding: 12px;
+      /* 使用 data URI SVG 作為背景圖（純 CSS，無外部資源） */
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='xMidYMid slice'><defs><linearGradient id='gSky' x1='0' x2='0' y1='0' y2='1'><stop offset='0' stop-color='%23cfefff'/><stop offset='1' stop-color='%23dbeffd'/></linearGradient><filter id='soft' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur stdDeviation='4'/></filter></defs><rect width='1200' height='300' fill='url(%23gSky)' rx='12'/><g transform='translate(80,70)' fill='%23ffffff' opacity='0.95'><circle cx='0' cy='20' r='18'/><circle cx='24' cy='12' r='22'/><circle cx='52' cy='18' r='18'/></g><g transform='translate(420,50)' fill='%23ffffff' opacity='0.95'><circle cx='0' cy='20' r='18'/><circle cx='24' cy='12' r='22'/><circle cx='52' cy='18' r='18'/></g><g transform='translate(860,80)' fill='%23ffffff' opacity='0.98'><circle cx='0' cy='18' r='16'/><circle cx='22' cy='10' r='20'/><circle cx='46' cy='16' r='16'/></g><g transform='translate(1040,60)'><circle cx='0' cy='0' r='28' fill='%23FFD166'/></g><rect x='0' y='220' width='1200' height='80' fill='%2348b34b' rx='6'/></svg>");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      /* 讓文字仍可讀：在背景上疊加白色半透明層 */
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* 若你想要 banner-card 內文字（.banner-text）更突出，可加一個半透明面板 */
+    .section-banner .banner-card .banner-text {
+      position: relative;
+      z-index: 3;
+      backdrop-filter: none;
+      color: #08304a;
+    }
+
+    /* 調整 banner 的內間距與最小高度（以確保 SVG 圖不被截掉） */
+    .section-banner .banner-card {
+      padding: 18px;
+      min-height: 160px;
+      border-radius: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="container">
+      <nav class="nav">
+        <div class="logo">
+          <div class="mark">🍄</div>
+          <h1>專案歷程查詢</h1>
+        </div>
+        <a class="btn-login" href="#">登入</a>
+      </nav>
+    </header>
+
+    <main class="container">
+
+      <!-- Banner -->
+      <section id="banner" class="section section-banner">
+        <div class="banner-card">
+          <div class="banner-visual">☁</div>
+          <div class="banner-text">
+            <p>
+                依名稱快速找到專案的歷程內容與記錄。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search -->
+      <section id="search-form" class="section section-search">
+        <div class="search-card">
+          <label class="search-label">搜尋專案名稱</label>
+          <div class="search-controls">
+            <input class="search-input" type="search" placeholder="內容較少，測試使用關鍵字: TEST、品牌、禾古源" />
+            <button class="btn-query" type="button"></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Result -->
+      <section id="result" class="section section-result">
+        <h2 style="margin:0 0 10px 0;">查詢結果</h2>
+
+        <div class="result-list" id="result-list">
+          <article class="result-item">
+            <div class="meta">
+              <span class="project-title">待辦清單 App</span>
+              <span class="project-date">[2025分頁]</span>
+            </div>
+            <p class="project-body">新增 CRUD、重構 UI、加入 RWD。</p>
+          </article>
+
+          <article class="result-item">
+            <div class="meta">
+              <span class="project-title">Dashboard 儀表板</span>
+              <span class="project-date">[2025分頁]</span>
+            </div>
+            <p class="project-body">新增 API 串接、優化圖表與載入速度。</p>
+          </article>
+        </div>
+
+      </section>
+
+    </main>
+
+    <footer class="container">
+      © 2025 學習使用
+    </footer>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  <script>
+  </script>
+</body>
+</html>
