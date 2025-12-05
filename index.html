@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>專案歷程查詢小站 — 前端工程師專用</title>
+  <title>專案查詢之星</title>
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
-  <meta name="description" content="專案名稱搜尋與歷程顯示" />
+  <meta name="description" content="專案歷程查詢小站，專案名稱搜尋與歷程顯示" />
 
   <style>
     /* CSS:BASE-START */
@@ -80,15 +80,6 @@
       box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
     }
 
-    .btn-login {
-      border: 2px solid rgba(0, 0, 0, 0.07);
-      padding: 8px 14px;
-      border-radius: 10px;
-      background: white;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
     main {
       flex: 1;
     }
@@ -99,7 +90,6 @@
       color: var(--muted);
       font-size: 14px;
     }
-
     /* CSS:BASE-END */
 
 
@@ -122,13 +112,15 @@
       width: 80px;
       height: 80px;
       border-radius: 12px;
-      background: linear-gradient(180deg, var(--color-accent-blue), var(--color-primary));
+      background-image: url('people.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 30px;
       font-weight: 900;
-      color: white;
       box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
     }
 
@@ -141,7 +133,6 @@
       margin: 0;
       color: var(--muted);
     }
-
     /* CSS:BANNER-END */
 
 
@@ -168,7 +159,7 @@
 
     .search-controls {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 10px;
     }
 
@@ -181,7 +172,14 @@
       background: white;
     }
 
-    /* ★★★★★ 馬力歐 Q 版金幣磚頭查詢按鈕（純 CSS） ★★★★★ */
+    /* 桌機版：可再調整 */
+    @media (min-width:768px) {
+      .search-controls {
+        flex-direction: row; /* 保持 row */
+      }
+    }
+
+    /* 馬力歐 Q 版金幣磚頭查詢按鈕 */
     .btn-query {
       width: 64px;
       height: 64px;
@@ -211,7 +209,6 @@
       transform: translateY(4px);
       box-shadow: inset -2px -2px #8b4513, inset 2px 2px #d2691e;
     }
-
     /* CSS:SEARCH-END */
 
 
@@ -252,7 +249,6 @@
       font-size: 14px;
       margin: 30px 0 0 0;
     }
-
     /* CSS:RESULT-END */
 
 
@@ -272,8 +268,8 @@
         gap: 16px;
       }
     }
-
     /* CSS:RWD-END */
+
     /* ====== LOGO MARK：Q 版小蘑菇（替換 .logo .mark） ====== */
     /* 將原本 .logo .mark 的文字隱藏，使用 pseudo-element 繪製蘑菇 */
     .logo .mark {
@@ -323,18 +319,6 @@
       border: 2px solid rgba(0, 0, 0, 0.12);
       z-index: 1;
       box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
-    }
-
-    /* 眼睛（用內嵌小元素：若你的 HTML 沒有 .eye，可用下面的偽元素繪兩眼） */
-    .logo .mark .eye {
-      display: none;
-    }
-
-    /* 若你有實體 .eye，可使用並顯示 */
-    /* 以偽元素繪左右眼（避開需要改 HTML） */
-    .logo .mark>.eye-left,
-    .logo .mark>.eye-right {
-      display: none;
     }
 
     .logo .mark {
@@ -394,8 +378,8 @@
     <header class="container">
       <nav class="nav">
         <div class="logo">
-          <div class="mark">🍄</div>
-          <h1>專案歷程查詢</h1>
+          <div class="mark"></div>
+          <h1>專案查詢之星</h1>
         </div>
       </nav>
     </header>
@@ -405,10 +389,10 @@
       <!-- Banner -->
       <section id="banner" class="section section-banner">
         <div class="banner-card">
-          <div class="banner-visual">☁</div>
+          <div class="banner-visual"></div>
           <div class="banner-text">
             <p>
-                依名稱快速找到專案的歷程內容與記錄。
+              專案名稱搜尋與歷程記錄顯示
             </p>
           </div>
         </div>
@@ -419,7 +403,7 @@
         <div class="search-card">
           <label class="search-label">搜尋專案名稱</label>
           <div class="search-controls">
-            <input class="search-input" type="search" placeholder="內容較少，測試使用關鍵字: TEST、品牌、禾古源" />
+            <input class="search-input" type="search" placeholder="內容較少，測試使用關鍵字: TESTR、品牌、禾古源" />
             <button class="btn-query" type="button"></button>
           </div>
         </div>
@@ -444,13 +428,12 @@
     </main>
 
     <footer class="container">
-      © 2025 學習使用，僅作查詢純顯示
+      © 2025 Vibe Coding 體驗營學習使用，僅作查詢純顯示
     </footer>
 
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="config.js"></script>
-    <script src="app.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
   <script>
   </script>
 </body>

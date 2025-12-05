@@ -102,6 +102,11 @@ function showMain() {
 function goSearch() {
   const keyword = saerchInp[0].value || '';
 
+  if (keyword == "") {
+    alert('請輸入關鍵字');
+    return false;
+  }
+
   loadTransactions(keyword);
 }
 
